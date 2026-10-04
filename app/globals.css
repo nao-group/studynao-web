@@ -67,3 +67,6 @@ html[data-mantine-color-scheme="dark"] .landing-action-button--secondary:not(:di
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
   .landing-action-button { transition: none; }
 }
+html[data-mantine-color-scheme="dark"] .reset-modal { background: #172833; color: #f1f5f6; }
+html[data-mantine-color-scheme="dark"] .reset-modal-header { background: #172833; }
+html[data-mantine-color-scheme="dark"] .reset-modal-icon { background: #f5e6d3; color: #d4a017; }
