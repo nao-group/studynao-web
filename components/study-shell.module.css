@@ -1,0 +1,336 @@
+.shell {
+  min-height: 100dvh;
+  background-color: #f5f2eb;
+  background-image:
+    linear-gradient(rgba(245, 242, 235, .42), rgba(245, 242, 235, .42)),
+    url("/images/auth/thinknao-china-landscape.png");
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.header {
+  border-bottom: 1px solid rgba(191, 226, 232, 0.14);
+  background:
+    linear-gradient(115deg, rgba(6, 30, 42, 0.94), rgba(10, 57, 68, 0.84)),
+    rgba(5, 36, 39, 0.88);
+  box-shadow: 0 10px 34px rgba(2, 19, 27, 0.16), inset 0 -1px rgba(255, 255, 255, 0.035);
+  -webkit-backdrop-filter: blur(22px) saturate(1.18);
+  backdrop-filter: blur(22px) saturate(1.18);
+}
+
+.logoButton { border-right: 1px solid rgba(191, 226, 232, 0.14); }
+
+.header :global(.mantine-Text-root) { text-shadow: 0 1px 12px rgba(0, 10, 18, 0.2); }
+
+.header button :global(.mantine-Text-root) { color: rgba(238, 248, 249, 0.82) !important; }
+
+.header svg { color: rgba(238, 248, 249, 0.82); }
+
+.lightSchemeLogo { display: block; }
+.darkSchemeLogo { display: none; }
+
+.themeToggle {
+  color: rgba(238, 248, 249, 0.88) !important;
+  background: rgba(211, 237, 241, 0.08) !important;
+}
+
+.themeToggle:hover { background: rgba(211, 237, 241, 0.16) !important; }
+
+.greeting {
+  font-family: var(--font-poppins);
+  font-size: clamp(18px, 1.6vw, 23px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+.navbar {
+  overflow: visible !important;
+  border-right: 1px solid rgba(191, 226, 232, 0.13);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(41, 112, 126, 0.18), transparent 34%),
+    linear-gradient(165deg, rgba(7, 38, 51, 0.93), rgba(4, 29, 39, 0.88));
+  box-shadow: 12px 0 34px rgba(2, 19, 27, 0.11), inset -1px 0 rgba(255, 255, 255, 0.025);
+  -webkit-backdrop-filter: blur(22px) saturate(1.15);
+  backdrop-filter: blur(22px) saturate(1.15);
+}
+
+.sectionLabel {
+  color: rgba(211, 233, 237, 0.48) !important;
+  font-family: var(--font-poppins);
+  font-weight: 600;
+  letter-spacing: 0.12em !important;
+}
+
+.navItem {
+  position: relative;
+  display: flex;
+  width: calc(100% - 8px);
+  min-height: 48px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 11px;
+  margin: 2px 8px 2px 0;
+  padding: 10px 16px 10px 18px;
+  overflow: hidden;
+  border-radius: 0 17px 17px 0;
+  color: rgba(224, 240, 243, 0.72);
+  font-family: var(--font-poppins);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navItem::before {
+  position: absolute;
+  top: 7px;
+  bottom: 7px;
+  left: 0;
+  width: 4px;
+  border-radius: 0 999px 999px 0;
+  background: #d4a017;
+  content: "";
+  opacity: 0;
+  transform: scaleY(0.45);
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navItem:hover,
+.navItem:focus-visible,
+.navItem[data-active] {
+  color: #ffffff;
+  background: linear-gradient(90deg, rgba(211, 237, 241, 0.18), rgba(211, 237, 241, 0.09));
+  box-shadow: 0 9px 26px rgba(0, 12, 20, 0.12), inset 0 1px rgba(255, 255, 255, 0.08);
+  transform: translateX(4px);
+}
+
+.navItem:hover::before,
+.navItem:focus-visible::before,
+.navItem[data-active]::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.navItem[data-active] {
+  color: #f4d778;
+  font-weight: 700;
+}
+
+.navItem[data-active] svg {
+  color: #d4a017;
+  filter: drop-shadow(0 2px 4px rgba(212, 160, 23, 0.18));
+}
+
+.navItem[data-collapsed] {
+  width: 58px;
+  min-height: 52px;
+  justify-content: center;
+  margin-right: 10px;
+  padding: 0;
+  border-radius: 0 17px 17px 0;
+}
+
+.navItem:focus-visible,
+.profileButton:focus-visible,
+.collapseButton:focus-visible {
+  outline: 2px solid #d4a017;
+  outline-offset: 2px;
+}
+
+.profileButton {
+  border-radius: 14px;
+  transition: background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.profileButton:hover {
+  background: rgba(211, 237, 241, 0.12);
+  box-shadow: 0 7px 22px rgba(0, 12, 20, 0.1);
+}
+
+.collapseButton {
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.collapseButton:hover {
+  color: #ffffff !important;
+  background: rgba(211, 237, 241, 0.11);
+}
+
+.sidebarFooter { border-top: 1px solid rgba(191, 226, 232, 0.12); }
+
+.main {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background: rgba(245, 242, 235, 0.56);
+  box-shadow: -8px -8px 30px rgba(2, 19, 27, 0.08);
+  -webkit-backdrop-filter: blur(10px) saturate(0.92);
+  backdrop-filter: blur(10px) saturate(0.92);
+}
+
+.innerCorner {
+  position: fixed;
+  /* Keep the decorative corner above the page surface, but below Mantine
+     modal/drawer overlays so it is dimmed with the rest of the workspace. */
+  z-index: 100;
+  top: var(--app-shell-header-offset, 80px);
+  left: var(--app-shell-navbar-offset, 240px);
+  display: block;
+  width: 36px;
+  height: 36px;
+  background: radial-gradient(circle at 100% 100%, transparent 0 35px, rgba(7, 38, 51, 0.98) 36px);
+  pointer-events: none;
+}
+
+.pageTransition {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  animation: page-fade-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.pageTransition > * {
+  animation: page-content-fade-in 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes page-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes page-content-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pageTransition,
+  .pageTransition > * {
+    animation: none;
+  }
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .shell {
+  color: #eef3f4;
+  background-color: #071d28;
+  background-image:
+    linear-gradient(rgba(7, 29, 40, .46), rgba(7, 29, 40, .46)),
+    url("/images/auth/thinknao-china-landscape-dark.png");
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .header {
+  border-bottom-color: rgba(92, 72, 34, 0.13);
+  background:
+    linear-gradient(115deg, rgba(255, 249, 235, 0.96), rgba(240, 226, 195, 0.9)),
+    rgba(247, 235, 210, 0.94);
+  box-shadow: 0 10px 34px rgba(0, 11, 18, 0.22), inset 0 -1px rgba(255, 255, 255, 0.5);
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .navbar {
+  border-right-color: rgba(92, 72, 34, 0.12);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(212, 160, 23, 0.12), transparent 34%),
+    linear-gradient(165deg, rgba(255, 249, 235, 0.96), rgba(239, 224, 192, 0.92));
+  box-shadow: 12px 0 34px rgba(0, 11, 18, 0.18), inset -1px 0 rgba(255, 255, 255, 0.38);
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .logoButton {
+  border-right-color: rgba(92, 72, 34, 0.13);
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .lightSchemeLogo { display: none; }
+:global(html[data-mantine-color-scheme="dark"]) .darkSchemeLogo { display: block; }
+
+:global(html[data-mantine-color-scheme="dark"]) .header :global(.mantine-Text-root),
+:global(html[data-mantine-color-scheme="dark"]) .header button :global(.mantine-Text-root) {
+  color: #152238 !important;
+  text-shadow: none;
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .header svg,
+:global(html[data-mantine-color-scheme="dark"]) .themeToggle {
+  color: #152238 !important;
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .themeToggle {
+  background: rgba(21, 34, 56, 0.07) !important;
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .themeToggle:hover {
+  background: rgba(21, 34, 56, 0.13) !important;
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .sectionLabel {
+  color: rgba(21, 34, 56, 0.48) !important;
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .navItem {
+  color: rgba(21, 34, 56, 0.7);
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .navItem:hover,
+:global(html[data-mantine-color-scheme="dark"]) .navItem:focus-visible,
+:global(html[data-mantine-color-scheme="dark"]) .navItem[data-active] {
+  color: #0f172a;
+  background: linear-gradient(90deg, rgba(180, 137, 24, 0.17), rgba(255, 255, 255, 0.24));
+  box-shadow: 0 9px 26px rgba(69, 50, 15, 0.1), inset 0 1px rgba(255, 255, 255, 0.5);
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .profileButton :global(.mantine-Text-root),
+:global(html[data-mantine-color-scheme="dark"]) .collapseButton,
+:global(html[data-mantine-color-scheme="dark"]) .collapseButton :global(.mantine-Text-root) {
+  color: #24324a !important;
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .profileButton:hover,
+:global(html[data-mantine-color-scheme="dark"]) .collapseButton:hover {
+  background: rgba(180, 137, 24, 0.1);
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .sidebarFooter {
+  border-top-color: rgba(92, 72, 34, 0.12);
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .main {
+  color: #eef3f4;
+  background: rgba(4, 22, 31, 0.74);
+  box-shadow: -8px -8px 30px rgba(0, 8, 14, 0.28);
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .innerCorner {
+  background: radial-gradient(circle at 100% 100%, transparent 0 35px, rgba(248, 238, 215, 0.98) 36px);
+}
+
+@media (max-width: 767px) {
+  .shell { background-attachment: scroll; }
+  .navbar { background: linear-gradient(165deg, rgba(7, 38, 51, 0.97), rgba(4, 29, 39, 0.94)); }
+  .navItem { width: calc(100% - 8px); }
+  .main {
+    border-radius: 24px 24px 0 0;
+    clip-path: inset(0 round 24px 24px 0 0);
+  }
+  .innerCorner { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navItem,
+  .navItem::before,
+  .profileButton,
+  .collapseButton {
+    transition: none;
+  }
+}

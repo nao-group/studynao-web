@@ -4,9 +4,6 @@ const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 export class ApiError extends Error {
   constructor(message: string, public status: number, public data: Record<string, unknown>) { super(message); }
 }
-export type StudyState = { user: { user_id: string; full_name: string; email: string }; membership: { role: "student" | "teacher"; status: string } | null; profile: Record<string, unknown> | null };
-export type Program = { id: number; code: string; subject: string; program: string; class_type: "private" | "group"; teaching_language: "English" | "Chinese"; session_count: number; duration_minutes: number; active: boolean; subject_ids: number[] };
-
 export async function api<T>(path: string, init: RequestInit = {}, authenticated = true): Promise<T> {
   let token = useAuth.getState().accessToken;
   async function refresh(): Promise<string | null> {

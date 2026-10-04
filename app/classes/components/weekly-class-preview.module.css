@@ -1,0 +1,8 @@
+.wrap { margin-top: 12px; }
+.grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+.day { min-width: 0; text-align: center; }
+.day strong { display: block; padding: 3px; color: var(--study-muted); font-size: 10px; }
+.track { position: relative; height: 120px; border: 1px solid var(--study-border); border-radius: 5px; background: repeating-linear-gradient(to bottom, transparent 0 7.5px, rgba(108,139,146,.13) 8px 8.5px); }
+.block { position: absolute; left: 1px; right: 1px; min-height: 8px; border-radius: 3px; background: #d4a017; color: #172033; overflow: hidden; }
+.block span { display: block; font-size: 8px; font-weight: 700; white-space: nowrap; }
+.wrap small { display: block; margin-top: 6px; color: var(--study-muted); font-size: 10px; line-height: 1.4; }

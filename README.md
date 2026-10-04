@@ -14,4 +14,8 @@ The portal uses port 3001. Set `NEXT_PUBLIC_API_URL` to NAO Service (default `ht
 
 ## Current scope
 
-Registration with a student/teacher choice, shared account login, product-role checks, student and teacher onboarding, teacher approval status, light/dark mode, and dashboard entry states are implemented. Class requests, availability, timetable, sessions, and payroll are subsequent phases.
+Registration with a student/teacher choice, shared account login, product-role checks, onboarding, teacher approval status, and light/dark mode are implemented. Students can request classes and join available groups; private students and teachers submit weekly availability. The portal displays generated class sessions in day, week, and month views. Session attendance, Zoom account assignment, and payroll are later phases.
+
+## Code organization
+
+Each route keeps its `page.tsx` as a small entry point. Its `api.ts` contains endpoint calls, `types.ts` contains route-specific data and component contracts, and `components/` contains the interactive UI. Shared API transport, StudyNao endpoints, data types, and scheduling utilities live in `lib/`; shared visual components such as the authenticated shell live in the top-level `components/` directory.
