@@ -15,7 +15,7 @@ export type ClassRequestFormProps = {
   onProgramChange: (value: string | null) => void;
   onSubjectsChange: (value: string[]) => void;
   onFirstDateChange: (value: string) => void;
-  onSubmit: () => void;
+  onSubmit: () => Promise<boolean>;
 };
 
 export type GroupRequestCardProps = {
@@ -27,4 +27,4 @@ export type GroupRequestCardProps = {
   onEnroll: (classId: number) => void;
 };
 
-export type AssignedClassesProps = { role: Role; classes: ScheduledClass[]; subjects: Subject[] };
+export type AssignedClassesProps = { role: Role; classes: ScheduledClass[]; requests: ClassRequest[]; programs: Program[]; subjects: Subject[] };

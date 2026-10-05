@@ -1,3 +1,4 @@
+.availability { position: relative; }
 .scroll { max-height: 620px; overflow: auto; border: 1px solid rgba(122,147,154,.26); border-radius: 16px; background: rgba(255,255,255,.7); }
 .grid { display: grid; grid-template-columns: 56px repeat(7, minmax(78px, 1fr)); min-width: 602px; }
 .corner, .day { position: sticky; top: 0; z-index: 2; display: grid; height: 42px; place-items: center; border-bottom: 1px solid rgba(122,147,154,.22); background: #edf5f4; color: #334b51; font-size: 12px; font-weight: 700; }
@@ -8,9 +9,19 @@
 .cell:hover { background: rgba(212,160,23,.3); }
 .cell[data-active] { background: #e5ba3e; box-shadow: inset 0 1px rgba(255,255,255,.55); }
 .cell[data-active]:hover { background: #d4a017; }
+.cell[data-preview] { outline: 1px solid rgba(95, 61, 0, .45); outline-offset: -1px; }
+.cell[data-erase] { background: rgba(174, 85, 65, .3); outline-color: rgba(174, 85, 65, .7); }
 .cell:focus-visible { position: relative; z-index: 2; outline: 2px solid #142c42; outline-offset: -2px; }
+.rangeTooltip { position: fixed; z-index: 400; max-width: 230px; padding: 7px 11px; border: 1px solid rgba(212,160,23,.36); border-radius: 9px; color: #fffdf8; background: #102f3b; box-shadow: 0 8px 24px rgba(0,12,20,.25); font-size: 12px; font-weight: 700; pointer-events: none; white-space: nowrap; }
+.selectedPanel { margin-top: 18px; padding: 16px; border: 1px solid var(--study-card-border); border-radius: 14px; background: rgba(212,160,23,.06); }
+.blockList { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; }
+.blockItem { min-width: 0; padding: 8px 10px; border: 1px solid var(--study-border); border-radius: 10px; color: var(--study-ink); background: var(--study-surface); }
+.blockItem :global(.mantine-Text-root) { min-width: 0; }
 :global(html[data-mantine-color-scheme="dark"]) .scroll { background: rgba(11,39,49,.72); border-color: rgba(210,229,231,.18); }
 :global(html[data-mantine-color-scheme="dark"]) .corner, :global(html[data-mantine-color-scheme="dark"]) .day { color: #172b36; background: #e6d7b7; }
 :global(html[data-mantine-color-scheme="dark"]) .time { color: #c5d5d8; background: #102f3b; }
 :global(html[data-mantine-color-scheme="dark"]) .cell { border-color: rgba(210,229,231,.1); }
 :global(html[data-mantine-color-scheme="dark"]) .cell[data-active] { background: #b88713; }
+:global(html[data-mantine-color-scheme="dark"]) .cell[data-erase] { background: rgba(174, 85, 65, .4); }
+:global(html[data-mantine-color-scheme="dark"]) .selectedPanel { background: rgba(8,31,41,.42); }
+:global(html[data-mantine-color-scheme="dark"]) .blockItem { color: #f2f6f7; background: #123541; }

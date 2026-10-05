@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Center, Loader, Stack, Text, Title } from "@mantine/core";
+import { Stack, Text, Title } from "@mantine/core";
 import { StudyShell } from "@/components/study-shell";
+import { StudyPageLoading } from "@/components/study-page-loading";
 import { AssignedClasses } from "./AssignedClasses";
 import { ClassRequestForm } from "./ClassRequestForm";
 import { GroupRequestCard } from "./GroupRequestCard";
@@ -62,7 +63,7 @@ export default function ClassesContent() {
   const pendingGroups = schedule?.requests.filter((request) => request.status === "pending" && programs.some((program) => program.id === request.program_id && program.class_type === "group")) ?? [];
 
   async function requestClasses() {
-    if (!selected || !subjectIds.length || !firstDate) { notifyError("Choose a program, subjects, and first class date."); return; }
+    if (!selected || !subjectIds.length || !firstDate) { notifyError("Choose a program, subjects, and first class date."); return false; }
     setBusy(true);
     try {
       const created = await createClassRequests({ program_id: selected.id, subject_ids: subjectIds.map(Number), preferred_start_date: firstDate });
@@ -74,7 +75,8 @@ export default function ClassesContent() {
       } else {
         for (const request of created.items) void loadOptions(request.id);
       }
-    } catch (cause) { notifyError(cause instanceof Error ? cause.message : "Unable to submit your request."); }
+      return true;
+    } catch (cause) { notifyError(cause instanceof Error ? cause.message : "Unable to submit your request."); return false; }
     finally { setBusy(false); }
   }
   async function loadOptions(requestId: number) {
@@ -88,7 +90,7 @@ export default function ClassesContent() {
     finally { setBusy(false); }
   }
 
-  if (!profile || !schedule) return <Center mih="100vh"><Loader aria-label="Loading classes" /></Center>;
+  if (!profile || !schedule) return <StudyShell state={profile} role={role}><StudyPageLoading label="Loading classes" /></StudyShell>;
   return <StudyShell state={profile}>
     <Stack gap="lg" p={{ base: "md", sm: "xl" }} maw={1200} w="100%" mx="auto">
       <div>
@@ -99,13 +101,13 @@ export default function ClassesContent() {
       {role === "student" && <ClassRequestForm
         programs={programs} subjects={subjects} selectedProgram={selected} programId={programId} subjectIds={subjectIds} firstDate={firstDate} busy={busy}
         onProgramChange={(value) => { setProgramId(value); setSubjectIds([]); }} onSubjectsChange={setSubjectIds} onFirstDateChange={setFirstDate}
-        onSubmit={() => void requestClasses()}
+        onSubmit={requestClasses}
       />}
       {role === "student" && pendingGroups.map((request) => <GroupRequestCard
         key={request.id} request={request} subject={subjects.find((item) => item.id === request.offering_id)} options={options[request.id]} busy={busy}
         onRefresh={() => void loadOptions(request.id)} onEnroll={(classId) => void enroll(request.id, classId)}
       />)}
-      <AssignedClasses role={role} classes={schedule.classes} subjects={subjects} />
+      <AssignedClasses role={role} classes={schedule.classes} requests={schedule.requests.filter((request) => request.status === "pending")} programs={programs} subjects={subjects} />
     </Stack>
   </StudyShell>;
 }

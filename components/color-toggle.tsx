@@ -1,8 +1,8 @@
 "use client";
-import { ActionIcon, Tooltip, useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon, Menu, Tooltip, useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
 import { useMounted } from "@mantine/hooks";
 import { IconMoon, IconSun } from "@tabler/icons-react";
-export function ColorToggle() {
+function useColorToggle() {
   const { setColorScheme } = useMantineColorScheme();
   const colorScheme = useComputedColorScheme("light");
   const mounted = useMounted();
@@ -18,11 +18,21 @@ export function ColorToggle() {
     }
   }
 
+  return { isDark, label, toggle };
+}
+
+export function ColorToggle({ className }: { className?: string }) {
+  const { isDark, label, toggle } = useColorToggle();
   return (
     <Tooltip label={label} withArrow>
-      <ActionIcon variant="subtle" size="lg" radius="xl" onClick={toggle} aria-label={label}>
+      <ActionIcon className={className} variant="subtle" size="lg" radius="xl" onClick={toggle} aria-label={label}>
         {isDark ? <IconSun size={19} stroke={1.8} /> : <IconMoon size={19} stroke={1.8} />}
       </ActionIcon>
     </Tooltip>
   );
+}
+
+export function ColorToggleMenuItem() {
+  const { isDark, label, toggle } = useColorToggle();
+  return <Menu.Item leftSection={isDark ? <IconSun size={17} /> : <IconMoon size={17} />} onClick={toggle}>{label}</Menu.Item>;
 }

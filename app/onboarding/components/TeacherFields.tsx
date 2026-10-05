@@ -1,5 +1,7 @@
-import { Alert, Avatar, Button, Checkbox, FileInput, Group, MultiSelect, Select, SimpleGrid, Text, TextInput } from "@mantine/core";
+import { Alert, Avatar, Checkbox, FileInput, Group, MultiSelect, Select, SimpleGrid, Text, TextInput } from "@mantine/core";
 import { IconPhoto } from "@tabler/icons-react";
+import { DatePickerInput } from "@mantine/dates";
+import { LandingActionButton } from "@/components/ui/landing-action-button";
 import { BANKS } from "../data";
 import type { TeacherFieldsProps } from "../types";
 import styles from "../onboarding.module.css";
@@ -11,8 +13,8 @@ export function TeacherFields(props: TeacherFieldsProps) {
       <FileInput mt="sm" accept="image/jpeg,image/png,image/webp" placeholder={props.hasSavedPhoto ? "Replace your photo" : "Choose a photo"} value={props.photoFile} onChange={props.onPhotoChange} clearable aria-label="Upload teacher profile photo" />
     </div>
     <SimpleGrid cols={{ base: 1, sm: 2 }}>
-      <TextInput label="Date of birth" type="date" required value={props.birthDate} onChange={(event) => props.onBirthDateChange(event.currentTarget.value)} />
-      <div><Select label="Home province" placeholder={props.provincesLoading ? "Loading provinces..." : "Select province"} data={props.provinceOptions} value={props.selectedProvince || null} onChange={(value) => props.onProvinceChange(value ?? "")} searchable nothingFoundMessage="No province found" disabled={props.provincesLoading} required />{props.provincesFailed && <Button type="button" variant="subtle" size="xs" mt={6} px={0} onClick={props.onRetryProvinces}>Retry loading provinces</Button>}</div>
+      <DatePickerInput label="Date of birth" placeholder="Choose your birth date" valueFormat="DD MMMM YYYY" required value={props.birthDate || null} onChange={(value) => props.onBirthDateChange(value ?? "")} maxDate={new Date()} />
+      <div><Select label="Home province" placeholder={props.provincesLoading ? "Loading provinces..." : "Select province"} data={props.provinceOptions} value={props.selectedProvince || null} onChange={(value) => props.onProvinceChange(value ?? "")} searchable nothingFoundMessage="No province found" disabled={props.provincesLoading} required />{props.provincesFailed && <LandingActionButton type="button" tone="secondary" size="xs" mt={6} onClick={props.onRetryProvinces}>Retry loading provinces</LandingActionButton>}</div>
     </SimpleGrid>
     <Select label="Marital status" required data={[{ value: "single", label: "Single" }, { value: "married", label: "Married" }]} value={props.maritalStatus} onChange={(value) => props.onMaritalStatusChange(value ?? "single")} />
     <div className={styles.checkboxField}><Text fw={600} size="sm" mb={10}>Class types you teach</Text><Checkbox.Group value={props.classTypes} onChange={props.onClassTypesChange}><Group gap="md"><Checkbox value="private" label="Private" /><Checkbox value="group" label="Group" /></Group></Checkbox.Group></div>

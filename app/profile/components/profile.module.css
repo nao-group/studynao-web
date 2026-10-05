@@ -1,0 +1,7 @@
+.avatarButton { position: relative; border-radius: 999px; cursor: pointer; }
+.avatarButton:focus-visible { outline: 2px solid #d4a017; outline-offset: 4px; }
+.camera { position: absolute; right: 0; bottom: 0; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; color: #fff; background: #172033; box-shadow: 0 3px 10px rgba(0,0,0,.25); }
+.device { padding: 16px 18px; border: 1px solid var(--study-card-border); border-radius: 16px; background: var(--study-field-bg); }
+.device[data-current] { border-color: rgba(212,160,23,.55); background: rgba(212,160,23,.09); }
+.deviceIcon { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px; color: #b8860b; background: rgba(212,160,23,.16); }
+.emptyDevices { padding: 20px; border-radius: 16px; background: var(--study-field-bg); color: var(--study-card-muted); text-align: center; }

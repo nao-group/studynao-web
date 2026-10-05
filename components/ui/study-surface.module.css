@@ -1,0 +1,16 @@
+.surface {
+  color: var(--study-card-ink);
+  border: 1px solid var(--study-card-border) !important;
+  border-radius: 18px !important;
+  background: var(--study-card-bg) !important;
+  box-shadow: var(--study-card-shadow);
+}
+
+.surface :global(.mantine-Text-root[data-dimmed]) {
+  color: var(--study-card-muted) !important;
+}
+
+:global(html[data-mantine-color-scheme="dark"]) .surface {
+  border-width: 1.5px !important;
+  backdrop-filter: blur(18px) saturate(1.08);
+}

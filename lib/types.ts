@@ -1,7 +1,7 @@
 export type Role = "student" | "teacher";
 
 export type StudyState = {
-  user: { user_id: string; full_name: string; email: string };
+  user: { user_id: string; full_name: string; email: string; avatar_url?: string | null };
   membership: { role: Role; status: string } | null;
   profile: Record<string, unknown> | null;
 };

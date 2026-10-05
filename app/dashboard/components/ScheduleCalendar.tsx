@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Badge, Button, Card, Group, SegmentedControl, Select, Stack, Text, TextInput } from "@mantine/core";
+import { ActionIcon, Badge, Group, SegmentedControl, Select, Stack, Text, TextInput } from "@mantine/core";
+import { LandingActionButton } from "@/components/ui/landing-action-button";
 import { IconChevronLeft, IconChevronRight, IconSearch } from "@tabler/icons-react";
+import { StudyCard } from "@/components/ui/study-surface";
 import type { ScheduledClass, ClassSession } from "@/lib/types";
 import styles from "./schedule-calendar.module.css";
 
@@ -48,8 +50,8 @@ export function ScheduleCalendar({ classes, sessions, teacherView }: { classes: 
     else setDay(addDays(day, direction * (view === "week" ? 7 : 1)));
   }
 
-  return <Card withBorder radius="lg" p={{ base: "sm", sm: "lg" }} className={styles.card}>
-    <Group justify="space-between" mb="md" gap="sm"><Group gap="xs"><Button variant="subtle" color="gray" aria-label="Previous period" px="xs" onClick={() => shift(-1)}><IconChevronLeft size={17} /></Button><Button variant="subtle" color="gray" aria-label="Next period" px="xs" onClick={() => shift(1)}><IconChevronRight size={17} /></Button><Button variant="light" size="xs" onClick={() => setDay(dateKey(new Date()))}>Today</Button><Text fw={700}>{title}</Text></Group><SegmentedControl value={view} onChange={(value) => setView(value as View)} data={[{ value: "day", label: "Day" }, { value: "week", label: "Week" }, { value: "month", label: "Month" }]} /></Group>
+  return <StudyCard p={{ base: "sm", sm: "lg" }}>
+    <Group justify="space-between" mb="md" gap="sm"><Group gap="xs"><ActionIcon variant="subtle" radius="xl" aria-label="Previous period" onClick={() => shift(-1)}><IconChevronLeft size={17} /></ActionIcon><ActionIcon variant="subtle" radius="xl" aria-label="Next period" onClick={() => shift(1)}><IconChevronRight size={17} /></ActionIcon><LandingActionButton tone="secondary" size="xs" onClick={() => setDay(dateKey(new Date()))}>Today</LandingActionButton><Text fw={700}>{title}</Text></Group><SegmentedControl value={view} onChange={(value) => setView(value as View)} data={[{ value: "day", label: "Day" }, { value: "week", label: "Week" }, { value: "month", label: "Month" }]} /></Group>
     <Group mb="md" align="end"><Select label="Subject" placeholder="All subjects" clearable data={subjectOptions} value={subject} onChange={setSubject} w={200} /><TextInput label={teacherView ? "Search student or class code" : "Search teacher or class code"} leftSection={<IconSearch size={15} />} value={query} onChange={(event) => setQuery(event.currentTarget.value)} flex={1} miw={220} /></Group>
     <div className={styles.scroll}>{view === "month" ? <div className={styles.month}>
       {dates.map((date, index) => <div key={date} className={styles.date} data-today={date === dateKey(new Date()) || undefined} data-outside={!date.startsWith(day.slice(0, 7)) || undefined}>
@@ -58,5 +60,5 @@ export function ScheduleCalendar({ classes, sessions, teacherView }: { classes: 
       </div>)}
     </div> : <div className={styles.timeline} data-view={view}><div className={styles.timeColumn}><div className={styles.timeHeader} />{Array.from({ length: 16 }, (_, index) => <span key={index} style={{ top: 38 + index * 48 }}>{String(index + 7).padStart(2, "0")}:00</span>)}</div>{dates.map((date) => <div key={date} className={styles.timelineDay} data-today={date === dateKey(new Date()) || undefined}><Text className={styles.timelineHead} size="sm" fw={700}>{formatDate(date, { weekday: "short", day: "numeric", month: "short" })}</Text><div className={styles.timeBody}>{(byDate.get(date) ?? []).map((session) => { const item = classMap.get(session.class_id)!; const start = minuteOfDay(session.starts_at); const end = minuteOfDay(session.ends_at); return <div key={session.id} className={styles.timedEvent} style={{ top: (start - 420) * .8, height: Math.max(28, (end - start) * .8) }}><Text fw={700} size="xs">{formatTime(session.starts_at)}–{formatTime(session.ends_at)} · {item.subject_name ?? "Class"}</Text><Text size="xs" truncate>{item.code} · {teacherView ? item.student_names?.join(", ") || "Student" : item.teacher_name}</Text></div>; })}</div></div>)}</div>}</div>
     {!filtered.length && <Group justify="center" py="xl"><Badge color="gray" variant="light">No scheduled sessions yet</Badge></Group>}
-  </Card>;
+  </StudyCard>;
 }

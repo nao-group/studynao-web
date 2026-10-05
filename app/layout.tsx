@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { mantineHtmlProps } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
+import "@mantine/dates/styles.css";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 

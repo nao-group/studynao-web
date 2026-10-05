@@ -1,0 +1,10 @@
+.classButton { display: block; width: 100%; height: 100%; text-align: left; border-radius: 18px; }
+.classButton:focus-visible { outline: 2px solid #d4a017; outline-offset: 4px; }
+.entryCard { height: 100%; min-height: 190px; transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
+.classButton:hover .entryCard { transform: translateY(-3px); border-color: rgba(212,160,23,.55); box-shadow: 0 14px 30px rgba(0,18,28,.12); }
+.entryIcon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; color: #b8860b; background: rgba(212,160,23,.15); }
+.drawer { color: var(--study-ink); background: var(--study-surface); }
+.drawerHeader { color: var(--study-ink); background: var(--study-surface); border-bottom: 1px solid var(--study-border); }
+.drawerBody { padding: 26px; }
+.detail { min-width: 0; padding: 16px; border: 1px solid var(--study-border); border-radius: 14px; background: var(--study-field-bg); overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: reduce) { .entryCard { transition: none; } .classButton:hover .entryCard { transform: none; } }
