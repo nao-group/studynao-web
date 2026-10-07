@@ -13,7 +13,7 @@ export function RegisterForm(props: RegisterFormProps) {
       <Text size="sm" fw={600} mb={6}>Email</Text>
       <Group gap="xs" align="flex-start" wrap="nowrap" className="auth-email-row">
         <TextInput aria-label="Email" placeholder="you@example.com" leftSection={<IconAt size={16} stroke={1.5} />} type="email" autoComplete="email" required value={props.email} onChange={(event) => props.onEmailChange(event.currentTarget.value)} style={{ flex: 1, minWidth: 0 }} />
-        <LandingActionButton presentation="otp" type="button" loading={props.sendingOtp} disabled={!props.canSendOtp || props.countdown > 0} onClick={props.onSendOtp} rightSection={!props.sendingOtp && <IconSend size={14} stroke={1.8} />} style={{ flexShrink: 0 }}>
+        <LandingActionButton presentation="otp" type="button" loading={props.sendingOtp} disabled={!props.canSendOtp || props.countdown > 0} onClick={(event) => { event.preventDefault(); event.stopPropagation(); props.onSendOtp(); }} rightSection={!props.sendingOtp && <IconSend size={14} stroke={1.8} />} style={{ flexShrink: 0 }}>
           {props.sent ? props.countdown > 0 ? `Resend (${props.countdown}s)` : "Resend OTP" : "Send OTP"}
         </LandingActionButton>
       </Group>
