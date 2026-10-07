@@ -19,6 +19,7 @@ export type RegisterFormProps = {
   sendingOtp: boolean;
   submitting: boolean;
   canSendOtp: boolean;
+  canCreateAccount: boolean;
   onRoleChange: (value: Role) => void;
   onFullNameChange: (value: string) => void;
   onEmailChange: (value: string) => void;

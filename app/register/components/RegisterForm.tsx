@@ -18,9 +18,9 @@ export function RegisterForm(props: RegisterFormProps) {
         </LandingActionButton>
       </Group>
     </Box>
-    <TextInput label="Verification code" placeholder="Enter your 6-digit code" leftSection={<IconShield size={16} stroke={1.5} />} inputMode="numeric" autoComplete="one-time-code" maxLength={6} minLength={6} required disabled={!props.sent} value={props.otp} onChange={(event) => props.onOtpChange(event.currentTarget.value.replace(/\s/g, ""))} />
+    <TextInput label="Verification code" placeholder="Enter your 6-digit code" leftSection={<IconShield size={16} stroke={1.5} />} inputMode="numeric" autoComplete="one-time-code" maxLength={6} minLength={6} required disabled={!props.sent} value={props.otp} onChange={(event) => props.onOtpChange(event.currentTarget.value.replace(/\D/g, ""))} />
     <PasswordInput label="Password" placeholder="At least 8 characters" leftSection={<IconLock size={16} stroke={1.5} />} description="At least 8 characters" autoComplete="new-password" required minLength={8} value={props.password} onChange={(event) => props.onPasswordChange(event.currentTarget.value)} />
-    <LandingActionButton presentation="auth" type="submit" fullWidth size="md" loading={props.submitting} disabled={!props.sent || props.otp.length !== 6} rightSection={!props.submitting && <IconArrowRight size={16} stroke={2.2} />}>Create account</LandingActionButton>
+    <LandingActionButton presentation="auth" type="submit" fullWidth size="md" loading={props.submitting} disabled={!props.canCreateAccount} rightSection={!props.submitting && <IconArrowRight size={16} stroke={2.2} />}>Create account</LandingActionButton>
     <Text size="sm" ta="center">Already have an account? <Anchor component={Link} href="/login">Log in</Anchor></Text>
   </Stack></form>;
 }

@@ -20,6 +20,10 @@ export default function RegisterContent() {
   const [sendingOtp, setSendingOtp] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const canSendOtp = fullName.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const canCreateAccount = canSendOtp && sent && /^\d{6}$/.test(otp) && password.length >= 8
+    && (role === "student" || role === "teacher") && !sendingOtp && !submitting;
+
   useEffect(() => {
     if (countdown === 0) return;
     const timer = window.setTimeout(() => setCountdown((value) => value - 1), 1000);
@@ -27,6 +31,7 @@ export default function RegisterContent() {
   }, [countdown]);
 
   async function sendOtp() {
+    if (!canSendOtp || sendingOtp || countdown > 0) return;
     setSendingOtp(true);
     try {
       await sendRegistrationOtp(fullName.trim(), email.trim());
@@ -42,6 +47,7 @@ export default function RegisterContent() {
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!canCreateAccount) return;
     setSubmitting(true);
     try {
       await registerAccount({ full_name: fullName.trim(), email: email.trim(), password, otp, studynao_role: role });
@@ -54,12 +60,12 @@ export default function RegisterContent() {
     }
   }
 
-  const canSendOtp = fullName.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
 
   return <AuthFrame mode="register" title="Create your StudyNao account" description="Choose your role. Teachers need admin approval before they can teach.">
     <RegisterForm
       role={role} fullName={fullName} email={email} password={password} otp={otp} sent={sent} countdown={countdown}
-      sendingOtp={sendingOtp} submitting={submitting} canSendOtp={canSendOtp}
+      sendingOtp={sendingOtp} submitting={submitting} canSendOtp={canSendOtp} canCreateAccount={canCreateAccount}
       onRoleChange={setRole} onFullNameChange={setFullName}
       onEmailChange={(value) => { setEmail(value); setSent(false); setOtp(""); }}
       onPasswordChange={setPassword} onOtpChange={setOtp} onSendOtp={() => void sendOtp()} onSubmit={submit}
