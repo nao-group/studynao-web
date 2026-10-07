@@ -8,7 +8,7 @@
 .date[data-outside] { opacity: .55; }
 .date[data-today] { background: rgba(212,160,23,.1); }
 .dateHead { display: block; margin-bottom: 10px; }
-.event { padding: 7px 8px; border-left: 3px solid #d4a017; border-radius: 6px; background: rgba(212,160,23,.15); }
+.event { display: block; width: 100%; text-align: left; color: inherit; font: inherit; cursor: pointer; padding: 7px 8px; border: 0; border-left: 3px solid #d4a017; border-radius: 6px; background: rgba(212,160,23,.15); }
 .event :global(.mantine-Text-root) { color: var(--study-ink); }
 .timeline { display: grid; grid-template-columns: 58px repeat(7, minmax(150px, 1fr)); min-width: 1108px; }
 .timeline[data-view="day"] { grid-template-columns: 58px minmax(320px, 1fr); min-width: 430px; }
@@ -19,6 +19,8 @@
 .timelineDay { border-right: 1px solid var(--study-border); }
 .timelineDay[data-today] .timelineHead { background: rgba(212,160,23,.12); }
 .timeBody { height: 720px; position: relative; background: repeating-linear-gradient(to bottom, transparent 0, transparent 47px, var(--study-border) 47px, var(--study-border) 48px); }
-.timedEvent { position: absolute; left: 3px; right: 3px; overflow: hidden; padding: 5px 7px; border-left: 3px solid #d4a017; border-radius: 6px; background: var(--study-event-bg, #faedc5); box-shadow: 0 1px 3px rgba(0,0,0,.08); z-index: 1; }
+.timedEvent { position: absolute; left: 3px; right: 3px; width: calc(100% - 6px); text-align: left; color: inherit; font: inherit; cursor: pointer; overflow: hidden; padding: 5px 7px; border: 0; border-left: 3px solid #d4a017; border-radius: 6px; background: var(--study-event-bg, #faedc5); box-shadow: 0 1px 3px rgba(0,0,0,.08); z-index: 1; }
+.event:hover, .timedEvent:hover { outline: 2px solid #d4a017; outline-offset: -2px; }
+.event:focus-visible, .timedEvent:focus-visible { outline: 3px solid #d4a017; outline-offset: 2px; }
 :global(html[data-mantine-color-scheme="dark"]) .timedEvent { background: #123541; }
 :global(html[data-mantine-color-scheme="dark"]) .event { background: rgba(11, 39, 49, .65); }

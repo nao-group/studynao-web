@@ -21,8 +21,27 @@ const monday = (key: string) => addDays(key, -((utc(key).getUTCDay() + 6) % 7));
 const formatDate = (key: string, options: Intl.DateTimeFormatOptions = { day: "numeric", month: "short" }) => new Intl.DateTimeFormat("en-GB", { ...options, timeZone: "UTC" }).format(utc(key));
 const formatTime = (instant: string) => new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(instant));
 const minuteOfDay = (instant: string) => { const [hour, minute] = formatTime(instant).split(":").map(Number); return hour * 60 + minute; };
+function layoutDay(list: ClassSession[]) {
+  const sorted = [...list].sort((a, b) => minuteOfDay(a.starts_at) - minuteOfDay(b.starts_at) || minuteOfDay(a.ends_at) - minuteOfDay(b.ends_at));
+  const placed: { session: ClassSession; lane: number; lanes: number }[] = [];
+  let cluster: typeof placed = [];
+  let laneEnds: number[] = [];
+  let clusterEnd = -1;
+  const flush = () => { for (const item of cluster) item.lanes = laneEnds.length; placed.push(...cluster); cluster = []; laneEnds = []; };
+  for (const session of sorted) {
+    const start = minuteOfDay(session.starts_at);
+    const end = Math.max(minuteOfDay(session.ends_at), start + 1);
+    if (cluster.length && start >= clusterEnd) flush();
+    let lane = laneEnds.findIndex((laneEnd) => laneEnd <= start);
+    if (lane < 0) { lane = laneEnds.length; laneEnds.push(end); } else laneEnds[lane] = end;
+    clusterEnd = cluster.length ? Math.max(clusterEnd, end) : end;
+    cluster.push({ session, lane, lanes: 1 });
+  }
+  flush();
+  return placed;
+}
 
-export function ScheduleCalendar({ classes, sessions, teacherView }: { classes: ScheduledClass[]; sessions: ClassSession[]; teacherView: boolean }) {
+export function ScheduleCalendar({ classes, sessions, teacherView, onSessionClick }: { classes: ScheduledClass[]; sessions: ClassSession[]; teacherView: boolean; onSessionClick: (session: ClassSession) => void }) {
   const [view, setView] = useState<View>("week");
   const [day, setDay] = useState(() => dateKey(new Date()));
   const [subject, setSubject] = useState<string | null>(null);
@@ -56,9 +75,9 @@ export function ScheduleCalendar({ classes, sessions, teacherView }: { classes: 
     <div className={styles.scroll}>{view === "month" ? <div className={styles.month}>
       {dates.map((date, index) => <div key={date} className={styles.date} data-today={date === dateKey(new Date()) || undefined} data-outside={!date.startsWith(day.slice(0, 7)) || undefined}>
         <Text className={styles.dateHead} size="sm" fw={700}>{weekday[index % 7]} {formatDate(date, { day: "numeric" })}</Text>
-        <Stack gap={5}>{(byDate.get(date) ?? []).map((session) => { const item = classMap.get(session.class_id)!; return <div key={session.id} className={styles.event}><Text fw={700} size="xs">{formatTime(session.starts_at)} · {item.subject_name ?? "Class"}</Text><Text size="xs" truncate>{item.code}</Text></div>; })}</Stack>
+        <Stack gap={5}>{(byDate.get(date) ?? []).map((session) => { const item = classMap.get(session.class_id)!; return <button type="button" key={session.id} className={styles.event} onClick={() => onSessionClick(session)} aria-label={`Open ${item.code} session ${session.session_number}`}><Text fw={700} size="xs">{formatTime(session.starts_at)} · {item.subject_name ?? "Class"}</Text><Text size="xs" truncate>{item.code}</Text></button>; })}</Stack>
       </div>)}
-    </div> : <div className={styles.timeline} data-view={view}><div className={styles.timeColumn}><div className={styles.timeHeader} />{Array.from({ length: 16 }, (_, index) => <span key={index} style={{ top: 38 + index * 48 }}>{String(index + 7).padStart(2, "0")}:00</span>)}</div>{dates.map((date) => <div key={date} className={styles.timelineDay} data-today={date === dateKey(new Date()) || undefined}><Text className={styles.timelineHead} size="sm" fw={700}>{formatDate(date, { weekday: "short", day: "numeric", month: "short" })}</Text><div className={styles.timeBody}>{(byDate.get(date) ?? []).map((session) => { const item = classMap.get(session.class_id)!; const start = minuteOfDay(session.starts_at); const end = minuteOfDay(session.ends_at); return <div key={session.id} className={styles.timedEvent} style={{ top: (start - 420) * .8, height: Math.max(28, (end - start) * .8) }}><Text fw={700} size="xs">{formatTime(session.starts_at)}–{formatTime(session.ends_at)} · {item.subject_name ?? "Class"}</Text><Text size="xs" truncate>{item.code} · {teacherView ? item.student_names?.join(", ") || "Student" : item.teacher_name}</Text></div>; })}</div></div>)}</div>}</div>
+    </div> : <div className={styles.timeline} data-view={view}><div className={styles.timeColumn}><div className={styles.timeHeader} />{Array.from({ length: 16 }, (_, index) => <span key={index} style={{ top: 38 + index * 48 }}>{String(index + 7).padStart(2, "0")}:00</span>)}</div>{dates.map((date) => <div key={date} className={styles.timelineDay} data-today={date === dateKey(new Date()) || undefined}><Text className={styles.timelineHead} size="sm" fw={700}>{formatDate(date, { weekday: "short", day: "numeric", month: "short" })}</Text><div className={styles.timeBody}>{layoutDay(byDate.get(date) ?? []).map(({ session, lane, lanes }) => { const item = classMap.get(session.class_id)!; const start = minuteOfDay(session.starts_at); const end = minuteOfDay(session.ends_at); return <button type="button" key={session.id} className={styles.timedEvent} onClick={() => onSessionClick(session)} aria-label={`Open ${item.code} session ${session.session_number}`} style={{ top: (start - 420) * .8, height: Math.max(28, (end - start) * .8), left: `calc(${lane / lanes * 100}% + 3px)`, width: `calc(${100 / lanes}% - 6px)`, right: "auto" }}><Text fw={700} size="xs">{formatTime(session.starts_at)}–{formatTime(session.ends_at)} · {item.subject_name ?? "Class"}</Text><Text size="xs" truncate>{item.code} · {teacherView ? item.student_names?.join(", ") || "Student" : item.teacher_name}</Text></button>; })}</div></div>)}</div>}</div>
     {!filtered.length && <Group justify="center" py="xl"><Badge color="gray" variant="light">No scheduled sessions yet</Badge></Group>}
   </StudyCard>;
 }

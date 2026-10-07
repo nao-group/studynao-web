@@ -23,7 +23,7 @@ function Logo({ collapsed }: { collapsed: boolean }) {
   </>;
 }
 
-export function StudyShell({ state, role: requestedRole = "student", children }: { state: StudyState | null; role?: Role; children: React.ReactNode }) {
+export function StudyShell({ state, role: requestedRole = "student", children, mainClassName }: { state: StudyState | null; role?: Role; children: React.ReactNode; mainClassName?: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const sessionUser = useAuth((session) => session.user);
@@ -40,7 +40,7 @@ export function StudyShell({ state, role: requestedRole = "student", children }:
     { label: role === "teacher" ? "Teaching classes" : "My classes", icon: IconCalendarEvent, href: `/classes?role=${role}`, path: "/classes" },
     { label: "Weekly availability", icon: IconClock, href: `/availability?role=${role}`, path: "/availability" },
   ].filter((item) => state?.membership?.status !== "rejected" || item.path === "/dashboard");
-  const pageLabel = nav.find((item) => item.path === pathname)?.label ?? (pathname === "/profile" ? "Profile" : "StudyNao");
+  const pageLabel = nav.find((item) => (item.path === pathname || pathname.startsWith(`${item.path}/`)))?.label ?? (pathname === "/profile" ? "Profile" : "StudyNao");
 
   async function logout() {
     try { await logOut(); } catch { /* Local session is still removed. */ }
@@ -57,8 +57,8 @@ export function StudyShell({ state, role: requestedRole = "student", children }:
     </Group></AppShell.Header>
     <AppShell.Navbar className={styles.navbar} style={{ display: "flex", flexDirection: "column" }}><ScrollArea flex={1} px={collapsed ? 0 : "xs"} py="md"><Stack gap={2}>
       {!collapsed && <Text className={styles.sectionLabel} size="xs" tt="uppercase" px={12} mb={4}>STUDYNAO</Text>}
-      {nav.map((item) => { const Icon = item.icon; const active = pathname === item.path; const button = <UnstyledButton key={item.path} className={styles.navItem} data-active={active || undefined} data-collapsed={collapsed || undefined} aria-current={active ? "page" : undefined} onClick={() => go(item.href)}><Icon size={18} stroke={1.65} aria-hidden="true" />{!collapsed && <span>{item.label}</span>}</UnstyledButton>; return collapsed ? <Tooltip key={item.path} label={item.label} position="right" withArrow>{button}</Tooltip> : button; })}
+      {nav.map((item) => { const Icon = item.icon; const active = pathname === item.path || pathname.startsWith(`${item.path}/`); const button = <UnstyledButton key={item.path} className={styles.navItem} data-active={active || undefined} data-collapsed={collapsed || undefined} aria-current={active ? "page" : undefined} onClick={() => go(item.href)}><Icon size={18} stroke={1.65} aria-hidden="true" />{!collapsed && <span>{item.label}</span>}</UnstyledButton>; return collapsed ? <Tooltip key={item.path} label={item.label} position="right" withArrow>{button}</Tooltip> : button; })}
     </Stack></ScrollArea><Box className={styles.sidebarFooter} px={collapsed ? rem(8) : "xs"} py="xs"><UnstyledButton className={styles.profileButton} p="xs" aria-label={`Open profile for ${name}`} onClick={() => go(`/profile?role=${role}`)} style={{ width: "100%" }}><Group gap="sm" wrap="nowrap" justify={collapsed ? "center" : "flex-start"}><Avatar src={avatar || undefined} radius="xl" size={28} color="yellow">{name.slice(0, 1)}</Avatar>{!collapsed && <Box style={{ minWidth: 0 }}><Text size="sm" fw={600} c="#F7FBFC" truncate>{name}</Text><Text size="xs" c="rgba(226,241,244,.58)" truncate>{user?.email ?? ""}</Text></Box>}</Group></UnstyledButton><UnstyledButton className={styles.collapseButton} visibleFrom="sm" aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"} onClick={() => setCollapsed((value) => !value)} style={{ display: "flex", alignItems: "center", justifyContent: collapsed ? "center" : "flex-end", width: "100%", height: rem(32), padding: `0 ${rem(4)}`, color: "rgba(226,241,244,.7)" }}>{collapsed ? <IconChevronRight size={15} /> : <Group gap={4}><Text size="xs">Collapse</Text><IconChevronLeft size={15} /></Group>}</UnstyledButton></Box></AppShell.Navbar>
-    <AppShell.Main className={styles.main}><Box key={pathname} className={styles.pageTransition}>{children}</Box></AppShell.Main><span className={styles.innerCorner} aria-hidden="true" />
+    <AppShell.Main className={[styles.main, mainClassName].filter(Boolean).join(" ")}><Box key={pathname} className={styles.pageTransition}>{children}</Box></AppShell.Main><span className={styles.innerCorner} aria-hidden="true" />
   </AppShell>;
 }
