@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AppShell, Avatar, Box, Burger, Group, Menu, ScrollArea, Stack, Text, Tooltip, UnstyledButton, rem } from "@mantine/core";
-import { IconCalendarEvent, IconChevronDown, IconChevronLeft, IconChevronRight, IconClock, IconLayoutGrid, IconLogout, IconUser } from "@tabler/icons-react";
+import { IconCalendarEvent, IconChevronDown, IconChevronLeft, IconChevronRight, IconClock, IconLayoutGrid, IconReceipt, IconLogout, IconUser } from "@tabler/icons-react";
 import { ColorToggle, ColorToggleMenuItem } from "@/components/color-toggle";
 import { logOut } from "@/lib/studynao-api";
 import type { StudyState } from "@/lib/types";
@@ -39,6 +39,7 @@ export function StudyShell({ state, role: requestedRole = "student", children, m
     { label: "Dashboard", icon: IconLayoutGrid, href: `/dashboard?role=${role}`, path: "/dashboard" },
     { label: role === "teacher" ? "Teaching classes" : "My classes", icon: IconCalendarEvent, href: `/classes?role=${role}`, path: "/classes" },
     { label: "Weekly availability", icon: IconClock, href: `/availability?role=${role}`, path: "/availability" },
+    ...(role === "teacher" ? [{ label: "Zoom reimbursements", icon: IconReceipt, href: "/reimbursements?role=teacher", path: "/reimbursements" }] : []),
   ].filter((item) => state?.membership?.status !== "rejected" || item.path === "/dashboard");
   const pageLabel = nav.find((item) => (item.path === pathname || pathname.startsWith(`${item.path}/`)))?.label ?? (pathname === "/profile" ? "Profile" : "StudyNao");
 

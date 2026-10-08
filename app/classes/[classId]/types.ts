@@ -33,7 +33,6 @@ export type TeacherSessionDetail = {
   session: ClassSession;
   class: { id: number; code: string; status: string };
   operations: (TeacherChecklist & { teaching_log: string | null; late_reason: string | null; submitted_at: string | null }) | null;
-  zoom_account: { id: number; name: string; email: string; password: string } | null;
   attendance: { student_user_id: string; student_name: string; status: AttendanceStatus | null; note: string | null }[];
 };
 
