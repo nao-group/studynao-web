@@ -22,14 +22,24 @@ export default function DashboardContent() {
 
   useEffect(() => {
     const requestedRole: Role = new URLSearchParams(window.location.search).get("role") === "teacher" ? "teacher" : "student";
-    getDashboardData(requestedRole)
+    let active = true;
+    let loaded = false;
+    const load = () => getDashboardData(requestedRole)
       .then(({ profile: person, schedule: calendar }) => {
+        if (!active) return;
+        loaded = true;
         if (!person.membership || person.membership.status === "onboarding") { router.replace(`/onboarding?role=${requestedRole}`); return; }
         if (needsPrivateAvailability(person, calendar)) { router.replace(`/availability?role=${requestedRole}`); return; }
-        if (requestedRole === "student" && !calendar.requests.length && !calendar.classes.length) { router.replace("/classes?role=student"); return; }
+        if (person.membership?.status === "active" && requestedRole === "student" && !calendar.requests.length && !calendar.classes.length) { router.replace("/classes?role=student"); return; }
         setSnapshot({ role: requestedRole, profile: person, schedule: calendar, loadedAt: Date.now() });
       })
-      .catch((cause) => { notifyError(cause instanceof Error ? cause.message : "Unable to load your dashboard."); router.replace("/login"); });
+      .catch((cause) => { if (!active || loaded) return; notifyError(cause instanceof Error ? cause.message : "Unable to load your dashboard."); router.replace("/login"); });
+    void load();
+    const refresh = () => { if (document.visibilityState === "visible") void load(); };
+    const timer = requestedRole === "student" ? window.setInterval(refresh, 60000) : null;
+    window.addEventListener("focus", refresh);
+    window.addEventListener("studynao-notifications-opened", refresh);
+    return () => { active = false; if (timer !== null) window.clearInterval(timer); window.removeEventListener("focus", refresh); window.removeEventListener("studynao-notifications-opened", refresh); };
   }, [router]);
 
   if (!snapshot) return <StudyShell state={null}><StudyPageLoading label="Loading dashboard" /></StudyShell>;
@@ -43,6 +53,7 @@ export default function DashboardContent() {
   const nextSession = upcoming[0];
   return <StudyShell state={profile}><Stack gap="xl" p={{ base: "md", sm: "xl" }} maw={1350} w="100%" mx="auto">
     <div><Text size="xs" fw={700} c="yellow.7" tt="uppercase" style={{ letterSpacing: ".14em" }}>{teacher ? "TEACHER PORTAL" : "STUDENT PORTAL"}</Text><Title order={1} mt={5}>Your learning space.</Title><Text c="dimmed" mt={6}>Your classes and schedule, all in one place.</Text></div>
+    {!teacher && profile.membership?.status === "inactive" && <Alert color="blue" title="Your StudyNao status is inactive">All your scheduled programs have finished. You can still review your class history and schedule.</Alert>}
     {pending && <Alert color="yellow" title="Teacher verification">Your profile is under admin review. You can update your private availability while you wait.</Alert>}
     {rejected && <Alert color="red" title="Application not approved">You can update your details and apply again.<LandingActionButton tone="secondary" mt="sm" onClick={() => router.push("/onboarding?role=teacher")}>Update profile</LandingActionButton></Alert>}
     <SimpleGrid cols={{ base: 1, sm: 3 }}>
@@ -50,7 +61,7 @@ export default function DashboardContent() {
       <div className="dash-hero"><IconCalendarEvent size={23} color="#d4a017" /><Text size="sm" c="dimmed" mt="md">Upcoming sessions</Text><Title order={2}>{upcoming.length}</Title></div>
       <div className="dash-hero"><IconClock size={23} color="#d4a017" /><Text size="sm" c="dimmed" mt="md">Next session</Text><Title order={2} size="h3">{nextSession ? new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jakarta", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(nextSession.starts_at)) : "Not scheduled"}</Title></div>
     </SimpleGrid>
-    {!teacher && !schedule.classes.length && !schedule.requests.length && <Alert color="blue" title="Ready to begin?">Choose private or group classes and select your subjects.<LandingActionButton mt="sm" rightSection={<IconArrowRight size={16} />} onClick={() => router.push("/classes?role=student")}>Choose classes</LandingActionButton></Alert>}
+    {!teacher && profile.membership?.status === "active" && !schedule.classes.length && !schedule.requests.length && <Alert color="blue" title="Ready to begin?">Choose private or group classes and select your subjects.<LandingActionButton mt="sm" rightSection={<IconArrowRight size={16} />} onClick={() => router.push("/classes?role=student")}>Choose classes</LandingActionButton></Alert>}
     {!teacher && schedule.requests.some((request) => request.status === "pending") && <Group><Badge color="yellow" variant="light">{schedule.requests.filter((request) => request.status === "pending").length} requests waiting for scheduling</Badge><LandingActionButton tone="secondary" size="sm" onClick={() => router.push("/classes?role=student")}>View requests</LandingActionButton></Group>}
     {teacher && awaitingLogs.length > 0 && <StudyCard p="lg"><Title order={2} size="h3" mb="xs">Teaching logs to finish</Title><Text c="dimmed" size="sm" mb="md">Mark student attendance and submit a teaching log for each finished session.</Text><Stack gap="xs">{awaitingLogs.map((session) => { const classroom = schedule.classes.find((item) => item.id === session.class_id); return <Group key={session.id} justify="space-between" gap="sm"><div><Text fw={700}>{classroom?.code ?? "Class"} · Session {session.session_number}</Text><Text size="sm" c="dimmed">{new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jakarta", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(session.starts_at))} WIB</Text></div><LandingActionButton tone="secondary" size="xs" onClick={() => router.push(classDetailHref(session.class_id, role, session.id, "dashboard"))}>Complete report</LandingActionButton></Group>; })}</Stack></StudyCard>}
     <ScheduleCalendar classes={schedule.classes} sessions={schedule.sessions} teacherView={teacher} onSessionClick={(session) => router.push(classDetailHref(session.class_id, role, session.id, "dashboard"))} />

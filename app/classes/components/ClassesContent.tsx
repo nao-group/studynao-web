@@ -98,7 +98,7 @@ export default function ClassesContent() {
         <Title order={1} mt={5}>{role === "teacher" ? "Your teaching classes" : "Choose your classes"}</Title>
         <Text c="dimmed" mt={6}>{role === "teacher" ? "Classes assigned by the admin will appear here." : "You can take more than one subject. Each subject creates its own class request."}</Text>
       </div>
-      {role === "student" && <ClassRequestForm
+      {role === "student" && profile?.membership?.status === "active" && <ClassRequestForm
         programs={programs} subjects={subjects} selectedProgram={selected} programId={programId} subjectIds={subjectIds} firstDate={firstDate} busy={busy}
         onProgramChange={(value) => { setProgramId(value); setSubjectIds([]); }} onSubjectsChange={setSubjectIds} onFirstDateChange={setFirstDate}
         onSubmit={requestClasses}
