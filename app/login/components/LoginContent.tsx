@@ -26,6 +26,7 @@ export default function LoginContent() {
     let state = await getStudyState(role);
     if (!state.membership) state = await joinStudyNao(role);
     notifySuccess("Welcome back!", `Good to see you again, ${data.user.full_name.split(" ")[0]}.`);
+    if (state.membership?.status === "availability_required") { router.replace("/availability?role=teacher"); return; }
     if (state.membership?.status === "onboarding") { router.replace(`/onboarding?role=${role}`); return; }
     if (state.membership?.status === "active" || state.membership?.status === "pending_verification") {
       const scheduling = await getSchedulingState(role);

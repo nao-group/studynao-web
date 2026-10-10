@@ -10,7 +10,8 @@ import styles from "@/components/ui/confirmation-modal.module.css";
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const time = (minute: number) => `${String(Math.floor(minute / 60)).padStart(2, "0")}:${String(minute % 60).padStart(2, "0")}`;
 
-export function ConfirmAvailabilityModal({ opened, blocks, busy, onClose, onConfirm }: {
+export function ConfirmAvailabilityModal({ opened, blocks, busy, onClose, onConfirm, submitForApproval = false }: {
+  submitForApproval?: boolean;
   opened: boolean;
   blocks: WeeklyBlock[];
   busy: boolean;
@@ -36,7 +37,7 @@ export function ConfirmAvailabilityModal({ opened, blocks, busy, onClose, onConf
     <Stack className={styles.details} gap={0} align="center">
       <Box className={styles.eyebrow}><IconCheck size={14} stroke={2.4} /> Final check</Box>
       <Text id="confirm-availability-title" className={styles.title} fz={26} fw={800} ta="center">Submit your availability?</Text>
-      <Text className={styles.description} mt={10} size="sm" ta="center" lh={1.65}>These weekly times will replace your previous availability. An admin will use them to match your private class schedule.</Text>
+      <Text className={styles.description} mt={10} size="sm" ta="center" lh={1.65}>{submitForApproval ? "Submit your profile and selected weekly times together for admin approval. You can teach once your application is approved." : "These weekly times will replace your previous availability. An admin will use them to match your private class schedule."}</Text>
       <Box className={styles.summary}>
         <Text fw={750} className={styles.classCode}>{blocks.length} selected time block{blocks.length === 1 ? "" : "s"}</Text>
         <Text size="xs" className={styles.schedule}>All times are in Jakarta (WIB).</Text>

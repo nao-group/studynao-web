@@ -41,7 +41,7 @@ export default function AvailabilityContent() {
     try {
       await submitAvailability({ role, blocks });
       setConfirmationOpen(false);
-      notifySuccess("Availability submitted", "Your weekly times are saved in Jakarta time.");
+      notifySuccess("Availability submitted", profile?.membership?.status === "availability_required" ? "Your profile and availability have been submitted together for admin approval." : "Your weekly times are saved in Jakarta time.");
       router.replace(`/dashboard?role=${role}`);
     } catch (cause) { notifyError(cause instanceof Error ? cause.message : "Unable to save availability."); }
     finally { setBusy(false); }
@@ -55,9 +55,9 @@ export default function AvailabilityContent() {
   if (!profile || !schedule) return <StudyShell state={profile} role={role}><StudyPageLoading label="Loading availability" /></StudyShell>;
   return <StudyShell state={profile}><Stack gap="lg" p={{ base: "md", sm: "xl" }} maw={1250} w="100%" mx="auto">
     <div><Text size="xs" fw={700} c="yellow.7" tt="uppercase" style={{ letterSpacing: ".14em" }}>PRIVATE CLASS SCHEDULING</Text><Title order={1} mt={5}>When are you available?</Title><Text c="dimmed" mt={6}>Mark every time you can attend or teach. All times are Asia/Jakarta (WIB), Monday to Sunday, 07:00–22:00.</Text></div>
-    <Alert color="yellow" radius="md">{role === "teacher" ? "An admin will match your available times with private students after your profile is approved." : "An admin will compare your availability with eligible teachers and confirm the final schedule."}</Alert>
+    <Alert color="yellow" radius="md">{role === "teacher" ? (profile.membership?.status === "availability_required" ? "Final onboarding step: submit your weekly availability. Your profile and schedule will then be reviewed together by an admin." : "An admin will match your available times with private students after your application is approved.") : "An admin will compare your availability with eligible teachers and confirm the final schedule."}</Alert>
     <StudyPaper p={{ base: "sm", sm: "lg" }}><WeeklyAvailability initial={schedule.availability} onChange={setBlocks} /></StudyPaper>
     <Group justify="space-between"><Text size="sm" c="dimmed">{blocks.length} time block{blocks.length === 1 ? "" : "s"} selected · changes replace your previous availability.</Text><LandingActionButton onClick={reviewSubmission} disabled={busy} rightSection={<IconArrowRight size={17} />}>Submit availability</LandingActionButton></Group>
-    <ConfirmAvailabilityModal opened={confirmationOpen} blocks={blocks} busy={busy} onClose={() => setConfirmationOpen(false)} onConfirm={() => void save()} />
+    <ConfirmAvailabilityModal opened={confirmationOpen} submitForApproval={profile.membership?.status === "availability_required"} blocks={blocks} busy={busy} onClose={() => setConfirmationOpen(false)} onConfirm={() => void save()} />
   </Stack></StudyShell>;
 }

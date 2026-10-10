@@ -54,7 +54,7 @@ export default function DashboardContent() {
   return <StudyShell state={profile}><Stack gap="xl" p={{ base: "md", sm: "xl" }} maw={1350} w="100%" mx="auto">
     <div><Text size="xs" fw={700} c="yellow.7" tt="uppercase" style={{ letterSpacing: ".14em" }}>{teacher ? "TEACHER PORTAL" : "STUDENT PORTAL"}</Text><Title order={1} mt={5}>Your learning space.</Title><Text c="dimmed" mt={6}>Your classes and schedule, all in one place.</Text></div>
     {!teacher && profile.membership?.status === "inactive" && <Alert color="blue" title="Your StudyNao status is inactive">All your scheduled programs have finished. You can still review your class history and schedule.</Alert>}
-    {pending && <Alert color="yellow" title="Teacher verification">Your profile is under admin review. You can update your private availability while you wait.</Alert>}
+    {pending && <Alert color="yellow" title="Teacher verification">Your complete application is under admin review. Your profile and required availability will be approved together before teaching access is enabled.</Alert>}
     {rejected && <Alert color="red" title="Application not approved">You can update your details and apply again.<LandingActionButton tone="secondary" mt="sm" onClick={() => router.push("/onboarding?role=teacher")}>Update profile</LandingActionButton></Alert>}
     <SimpleGrid cols={{ base: 1, sm: 3 }}>
       <div className="dash-hero"><IconSchool size={23} color="#d4a017" /><Text size="sm" c="dimmed" mt="md">{teacher ? "Teaching classes" : "Enrolled classes"}</Text><Title order={2}>{schedule.classes.length}</Title></div>

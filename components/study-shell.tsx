@@ -40,7 +40,7 @@ export function StudyShell({ state, role: requestedRole = "student", children, m
     { label: "Dashboard", icon: IconLayoutGrid, href: `/dashboard?role=${role}`, path: "/dashboard" },
     { label: role === "teacher" ? "Teaching classes" : "My classes", icon: IconCalendarEvent, href: `/classes?role=${role}`, path: "/classes" },
     { label: "Weekly availability", icon: IconClock, href: `/availability?role=${role}`, path: "/availability" },
-    ...(role === "teacher" ? [{ label: "Zoom reimbursements", icon: IconReceipt, href: "/reimbursements?role=teacher", path: "/reimbursements" }] : []),
+    ...(role === "teacher" ? [{ label: "Reimbursement", icon: IconReceipt, href: "/reimbursements?role=teacher", path: "/reimbursements" }] : []),
   ].filter((item) => (state?.membership?.status !== "rejected" || item.path === "/dashboard") && !(role === "student" && state?.membership?.status === "inactive" && item.path === "/availability"));
   const pageLabel = nav.find((item) => (item.path === pathname || pathname.startsWith(`${item.path}/`)))?.label ?? (pathname === "/profile" ? "Profile" : "StudyNao");
 

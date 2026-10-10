@@ -9,7 +9,7 @@ import { LandingActionButton } from "@/components/ui/landing-action-button";
 import { IconArrowRight } from "@tabler/icons-react";
 import type { Program, Role, StudyState, Subject } from "@/lib/types";
 import { notifyError, notifySuccess } from "@/lib/feedback";
-import { getSchedulingState, joinStudyNao } from "@/lib/studynao-api";
+import { joinStudyNao } from "@/lib/studynao-api";
 import { getOnboardingData, getProvinces, saveOnboarding, uploadTeacherPhoto } from "../api";
 import { BANKS, localWhatsApp } from "../data";
 import type { ProvinceOption, StudentOnboarding, TeacherOnboarding } from "../types";
@@ -117,10 +117,10 @@ export default function OnboardingContent() {
         class_types: classTypes, teaching_languages: languages, subject_ids: subjectIds.map(Number),
         hsk_level: hskLevel ? Number(hskLevel) : null, bank_name: bankName, bank_account_number: bankNumber, bank_account_name: bankOwner,
       };
-      await saveOnboarding(role, body);
-      if (role === "teacher" && photoFile) await uploadTeacherPhoto(photoFile);
-      notifySuccess("Profile saved", role === "teacher" ? "Your profile is awaiting admin approval." : "Your StudyNao profile is ready.");
-      const privateAvailabilityNeeded = role === "teacher" && classTypes.includes("private") && !(await getSchedulingState("teacher")).availability_submitted;
+      let saved = await saveOnboarding(role, body);
+      if (role === "teacher" && photoFile) saved = await uploadTeacherPhoto(photoFile);
+      const privateAvailabilityNeeded = saved.membership?.status === "availability_required";
+      notifySuccess("Profile saved", privateAvailabilityNeeded ? "Choose your weekly availability to submit your application for admin approval." : role === "teacher" ? "Your complete application is awaiting admin approval." : "Your StudyNao profile is ready.");
       router.replace(privateAvailabilityNeeded ? "/availability?role=teacher" : `/dashboard?role=${role}`);
     } catch (cause) { notifyError(cause instanceof Error ? cause.message : "Unable to save your profile."); }
     finally { setBusy(false); }
@@ -156,7 +156,7 @@ export default function OnboardingContent() {
             bankName={bankName} otherBank={otherBank} onBankChoiceChange={(value) => { setOtherBank(value === "__other__"); setBankName(value === "__other__" ? "" : value ?? ""); }}
             onBankNameChange={setBankName} bankNumber={bankNumber} onBankNumberChange={setBankNumber} bankOwner={bankOwner} onBankOwnerChange={setBankOwner}
           />}
-          <div className={styles.actions}><LandingActionButton type="submit" size="md" loading={busy} rightSection={!busy && <IconArrowRight size={16} stroke={2.2} />}>Save profile</LandingActionButton></div>
+          <div className={styles.actions}><LandingActionButton type="submit" size="md" loading={busy} rightSection={!busy && <IconArrowRight size={16} stroke={2.2} />}>{role === "teacher" && classTypes.includes("private") ? "Continue to availability" : role === "teacher" ? "Submit for approval" : "Save profile"}</LandingActionButton></div>
         </Stack></form>}
       </div>
     </div></section>

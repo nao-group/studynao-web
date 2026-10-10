@@ -9,7 +9,7 @@ const emptySchedule: SchedulingState = {
 export async function getDashboardData(role: Role) {
   const profile = await getStudyState(role);
   const status = profile.membership?.status;
-  const schedule = status === "active" || status === "pending_verification" || (role === "student" && status === "inactive")
+  const schedule = status === "active" || status === "pending_verification" || status === "availability_required" || (role === "student" && status === "inactive")
     ? await getSchedulingState(role) : emptySchedule;
   return { profile, schedule };
 }

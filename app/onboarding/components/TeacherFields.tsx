@@ -24,6 +24,6 @@ export function TeacherFields(props: TeacherFieldsProps) {
     <SimpleGrid cols={{ base: 1, sm: 2 }}><Select label="Bank" placeholder="Search for your bank" searchable nothingFoundMessage="No match. Clear search and choose Other bank." data={BANKS} value={props.otherBank ? "__other__" : props.bankName || null} onChange={props.onBankChoiceChange} required /><TextInput label="Bank account number" required value={props.bankNumber} onChange={(event) => props.onBankNumberChange(event.currentTarget.value)} /></SimpleGrid>
     {props.otherBank && <TextInput label="Other bank name" placeholder="Enter your bank name" required value={props.bankName} onChange={(event) => props.onBankNameChange(event.currentTarget.value)} />}
     <TextInput label="Account holder name" required value={props.bankOwner} onChange={(event) => props.onBankOwnerChange(event.currentTarget.value)} />
-    <Alert color="yellow">After submission, your teacher profile will await admin approval before you can teach.</Alert>
+    <Alert color="yellow">{props.classTypes.includes("private") ? "Next, choose your weekly availability. Your profile and schedule will be submitted together for one admin approval." : "Your completed profile will be submitted for admin approval before you can teach."}</Alert>
   </>;
 }
